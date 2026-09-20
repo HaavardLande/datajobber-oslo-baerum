@@ -23,6 +23,9 @@ a{color:inherit}
 .stat b{font-size:26px;display:block}
 .stat span{font-size:13px;color:#d8efe5}
 .toolbar{position:sticky;top:0;z-index:10;background:rgba(245,247,250,.92);backdrop-filter:blur(10px);padding:10px 0 14px}
+.filter-panel{display:block}
+.filter-summary{display:none}
+.filter-content{display:block}
 .controls{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 4px 18px rgba(16,24,40,.05);display:grid;grid-template-columns:2fr repeat(4,1fr);gap:10px}
 input,select{width:100%;border:1px solid #d0d5dd;background:white;border-radius:10px;padding:11px 12px;font:inherit;color:var(--text)}
 input:focus,select:focus{outline:2px solid #a6e3c8;border-color:#6ccba2}
@@ -64,7 +67,19 @@ input:focus,select:focus{outline:2px solid #a6e3c8;border-color:#6ccba2}
 @media(max-width:640px){
  .container{padding:14px}
  .hero{padding:22px 18px;border-radius:16px}
- .controls{grid-template-columns:1fr}
+ .toolbar{top:0;padding:8px 0 10px}
+ .filter-panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 4px 18px rgba(16,24,40,.06);overflow:hidden}
+ .filter-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;cursor:pointer;list-style:none;font-weight:800;color:#1d2939;user-select:none}
+ .filter-summary::-webkit-details-marker{display:none}
+ .filter-summary::after{content:"⌄";font-size:22px;line-height:1;transition:transform .18s ease;color:#667085}
+ .filter-panel[open] .filter-summary::after{transform:rotate(180deg)}
+ .filter-summary-text{display:flex;align-items:center;gap:8px;min-width:0}
+ .filter-count{display:none;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:var(--accent2);color:var(--accent);font-size:12px;font-weight:800}
+ .filter-count.visible{display:inline-flex}
+ .filter-content{padding:0 12px 12px}
+ .controls{grid-template-columns:1fr;padding:0;border:0;box-shadow:none;border-radius:0}
+ .quick{padding:0 2px 2px;margin-top:10px;gap:7px}
+ .quick button{font-size:14px;padding:8px 10px}
  .stats{grid-template-columns:1fr 1fr}
  .topline{flex-direction:column}
  .details{grid-template-columns:1fr}
@@ -86,25 +101,33 @@ input:focus,select:focus{outline:2px solid #a6e3c8;border-color:#6ccba2}
   </section>
 
   <div class="toolbar">
-    <div class="controls">
-      <input id="q" class="search" type="search" placeholder="Søk på stilling, selskap, teknologi …">
-      <select id="category"><option value="">Alle fagområder</option></select>
-      <select id="location"><option value="">Alle steder</option><option>Oslo</option><option>Bærum</option></select>
-      <select id="seniority"><option value="">Alle nivåer</option></select>
-      <select id="sort">
-        <option value="deadline">Sorter: nærmeste frist</option>
-        <option value="company">Sorter: selskap A–Å</option>
-        <option value="title">Sorter: stilling A–Å</option>
-        <option value="category">Sorter: fagområde</option>
-      </select>
-    </div>
-    <div class="quick">
-      <button data-quick="soon">⏰ Frist innen 14 dager</button>
-      <button data-quick="baerum">📍 Bare Bærum</button>
-      <button data-quick="senior">🧭 Senior / Lead / Staff</button>
-      <button data-quick="platform">🧱 Data Platform</button>
-      <button data-quick="reset">Nullstill</button>
-    </div>
+    <details id="filterPanel" class="filter-panel" open>
+      <summary class="filter-summary" aria-label="Vis eller skjul filtre">
+        <span class="filter-summary-text">⚙️ Filtre <span id="filterCount" class="filter-count"></span></span>
+        <span class="small">Trykk for å vise/skjule</span>
+      </summary>
+      <div class="filter-content">
+        <div class="controls">
+          <input id="q" class="search" type="search" placeholder="Søk på stilling, selskap, teknologi …">
+          <select id="category"><option value="">Alle fagområder</option></select>
+          <select id="location"><option value="">Alle steder</option><option>Oslo</option><option>Bærum</option></select>
+          <select id="seniority"><option value="">Alle nivåer</option></select>
+          <select id="sort">
+            <option value="deadline">Sorter: nærmeste frist</option>
+            <option value="company">Sorter: selskap A–Å</option>
+            <option value="title">Sorter: stilling A–Å</option>
+            <option value="category">Sorter: fagområde</option>
+          </select>
+        </div>
+        <div class="quick">
+          <button data-quick="soon">⏰ Frist innen 14 dager</button>
+          <button data-quick="baerum">📍 Bare Bærum</button>
+          <button data-quick="senior">🧭 Senior / Lead / Staff</button>
+          <button data-quick="platform">🧱 Data Platform</button>
+          <button data-quick="reset">Nullstill</button>
+        </div>
+      </div>
+    </details>
   </div>
 
   <div class="resultbar">
@@ -171,6 +194,28 @@ function isSoon(j){
   return days>=0 && days<=14;
 }
 let quickMode="";
+const isMobile = () => window.matchMedia("(max-width: 640px)").matches;
+function activeFilterCount(){
+  let n=0;
+  if($("#q").value.trim()) n++;
+  if($("#category").value) n++;
+  if($("#location").value) n++;
+  if($("#seniority").value) n++;
+  if($("#sort").value!=="deadline") n++;
+  if(quickMode) n++;
+  return n;
+}
+function updateFilterSummary(){
+  const badge=$("#filterCount");
+  if(!badge) return;
+  const n=activeFilterCount();
+  badge.textContent=n;
+  badge.classList.toggle("visible",n>0);
+}
+function collapseFiltersOnMobile(){
+  const panel=$("#filterPanel");
+  if(panel && isMobile()) panel.open=false;
+}
 function render(){
   const q=$("#q").value.trim().toLowerCase();
   const cat=$("#category").value;
@@ -200,6 +245,7 @@ function render(){
 
   $("#count").textContent=`${list.length} av ${jobs.length} stillinger`;
   $("#empty").style.display=list.length?"none":"block";
+  updateFilterSummary();
   $("#grid").innerHTML=list.map(j=>`
     <article class="card">
       <div class="topline">
@@ -227,7 +273,12 @@ function render(){
     </article>
   `).join("");
 }
-["q","category","location","seniority","sort"].forEach(id=>$("#"+id).addEventListener(id==="q"?"input":"change",()=>{quickMode="";render();}));
+$("#q").addEventListener("input",()=>{quickMode="";render();});
+["category","location","seniority","sort"].forEach(id=>$("#"+id).addEventListener("change",()=>{
+  quickMode="";
+  render();
+  collapseFiltersOnMobile();
+}));
 document.querySelectorAll("[data-quick]").forEach(btn=>btn.addEventListener("click",()=>{
   const mode=btn.dataset.quick;
   if(mode==="reset"){
@@ -238,7 +289,12 @@ document.querySelectorAll("[data-quick]").forEach(btn=>btn.addEventListener("cli
     $("#q").value=""; $("#category").value=""; $("#location").value=""; $("#seniority").value="";
   }
   render();
+  collapseFiltersOnMobile();
 }));
+window.addEventListener("resize",()=>{
+  const panel=$("#filterPanel");
+  if(panel && !isMobile()) panel.open=true;
+});
 fillStats(); fillFilters(); render();
 </script>
 </body>
