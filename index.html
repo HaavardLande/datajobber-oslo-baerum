@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Data-jobber i Oslo og Bærum – 12. oktober 2026</title>
+<title>Data-jobber i Oslo og Bærum – 19. oktober 2026</title>
 <style>
 :root {
   --bg:#f5f7fa; --panel:#ffffff; --text:#16202a; --muted:#667085; --line:#e4e7ec;
@@ -32,6 +32,8 @@ input:focus,select:focus{outline:2px solid #a6e3c8;border-color:#6ccba2}
 .quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .quick button{border:1px solid var(--line);background:white;border-radius:999px;padding:8px 12px;cursor:pointer;font-weight:600}
 .quick button:hover{border-color:#98a2b3}
+.quick button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:white}
+.quick button:focus-visible{outline:3px solid #6ccba2;outline-offset:2px}
 .resultbar{display:flex;justify-content:space-between;align-items:center;margin:18px 2px 10px;gap:12px}
 .resultbar strong{font-size:18px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
@@ -91,7 +93,7 @@ input:focus,select:focus{outline:2px solid #a6e3c8;border-color:#6ccba2}
 <div class="container">
   <section class="hero">
     <h1>Data-jobber i Oslo og Bærum</h1>
-    <p>Interaktiv oversikt basert på et bredt nettsøk i FINN, NAV/Arbeidsplassen, LinkedIn, arbeidsgivernes karrieresider og andre jobbportaler, sist oppdatert 12. oktober 2026 kl. 21.30. Omfatter Data Engineering, Data Platform, Data Architecture, DataOps, Data Management, Data Governance, MDM/Data Quality, Analytics Engineering og nærliggende roller.</p>
+    <p>Interaktiv oversikt basert på et bredt nettsøk i FINN, NAV/Arbeidsplassen, LinkedIn, arbeidsgivernes karrieresider og andre jobbportaler, sist oppdatert 19. oktober 2026. Omfatter Data Engineering, Data Platform, Data Architecture, DataOps, Data Management, Data Governance, MDM/Data Quality, Analytics Engineering og nærliggende roller.</p>
     <div class="stats">
       <div class="stat"><b id="statTotal"></b><span>unike aktive annonser</span></div>
       <div class="stat"><b id="statOslo"></b><span>i Oslo</span></div>
@@ -120,6 +122,7 @@ input:focus,select:focus{outline:2px solid #a6e3c8;border-color:#6ccba2}
           </select>
         </div>
         <div class="quick">
+          <button id="newOnly" type="button" aria-pressed="false">✨ Nye ved siste oppdatering</button>
           <button data-quick="soon">⏰ Frist innen 14 dager</button>
           <button data-quick="baerum">📍 Bare Bærum</button>
           <button data-quick="senior">🧭 Senior / Lead / Staff</button>
@@ -132,7 +135,7 @@ input:focus,select:focus{outline:2px solid #a6e3c8;border-color:#6ccba2}
 
   <div class="resultbar">
     <strong id="count"></strong>
-    <span class="small">Klikk «Åpne annonse» for å gå til kilden i ny fane.</span>
+    <span class="small">«Nye» betyr lagt til i oversikten 19. oktober. Kan kombineres med andre filtre.</span>
   </div>
 
   <main id="grid" class="grid"></main>
@@ -141,11 +144,13 @@ input:focus,select:focus{outline:2px solid #a6e3c8;border-color:#6ccba2}
   <section class="notice">
     <h2>Om datagrunnlaget</h2>
     <div>Oversikten bygger på nettsøk, gjennomgang av FINNs resultatlister og kontroll av relevante annonser hos FINN, NAV/Arbeidsplassen, LinkedIn og arbeidsgivernes karrieresider. Søket omfatter både engelske og norske stillingstitler samt nærliggende roller innen integrasjon, informasjonsstyring og ML-plattformer. Annonser med passert frist eller bekreftet avsluttet rekruttering tas ut. Samme arbeidsgiver og stilling telles én gang, også når annonsen finnes på flere portaler. Én annonse kan omfatte flere ledige stillinger. Oversikten er ikke en garanti for fullstendig markedsdekning.</div>
-    <div style="margin-top:8px"><b>Merk:</b> Stillingsmarkedet endrer seg raskt. Noen lenker går til søkesider når direkte annonse-URL ikke var tilgjengelig i den verifiserte indeksen.</div>
+    <div style="margin-top:8px"><b>Merk:</b> Stillingsmarkedet endrer seg raskt. Kontrollen bruker tilgjengelige annonsetekster og karrieresider; enkelte kilder er kontrollert via søkeindeks eller en alternativ jobbportal. Se kildemerking på hvert kort.</div>
   </section>
 </div>
 
 <script>
+// Ved neste dataoppdatering: endre latestUpdateId og sett addedInUpdate bare på nye annonser.
+const latestUpdateId = "2026-10-19";
 const jobs = [
   {
     "title": "dataplattformingeniør",
@@ -155,7 +160,7 @@ const jobs = [
     "seniority": "Erfaren / Senior",
     "workform": "Fast, heltid · inntil én dag hjemmekontor",
     "deadline": "2026-11-09",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Ende-til-ende-ansvar for Stortingets dataløp i Microsoft Fabric, fra kildesystemer via PySpark/Python og modellering til semantiske modeller i Power BI. Rollen kombinerer plattformforvaltning, arkitektur og data governance.",
     "skills": [
       "Microsoft Fabric",
@@ -169,7 +174,8 @@ const jobs = [
     "salary": "678 000–964 000 kr",
     "url": "https://www.finn.no/job/ad/478111019",
     "source": "FINN",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Leder KI og data",
@@ -179,7 +185,7 @@ const jobs = [
     "seniority": "Leder",
     "workform": "Fast, heltid",
     "deadline": "2026-11-01",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Lede og utvikle fagmiljøer innen data, analyse og KI, sikre riktig kompetanse og kapasitet, og videreutvikle prinsipper for ansvarlig bruk og forvaltning av data og kunstig intelligens.",
     "skills": [
       "Data Management",
@@ -192,7 +198,8 @@ const jobs = [
     "salary": "Konkurransedyktig, ikke tallfestet",
     "url": "https://www.finn.no/job/ad/478272862",
     "source": "FINN",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Platform Manager/Lead",
@@ -202,7 +209,7 @@ const jobs = [
     "seniority": "Lead",
     "workform": "Fast, heltid · fleksibel hjemmekontorordning",
     "deadline": "Løpende",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Eie roadmap og videreutvikling av dentsus datavarehus i Google Cloud og BigQuery. Hands-on ansvar for dataflyt, integrasjoner, datamodellering, datakvalitet, tilgangsstyring og plattformens produktutvikling.",
     "skills": [
       "GCP",
@@ -217,7 +224,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://dentsuaegis.wd3.myworkdayjobs.com/en-US/DAN_GLOBAL/job/Data-Platform-Manager-Lead_R1129398",
     "source": "dentsu Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Løsningsarkitekt – Dataplattformer, AI og DataOps",
@@ -227,7 +235,7 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Lede design og implementering av skalerbare data- og AI-plattformer, omsette datastrategi til tekniske leveranser og etablere DataOps-rammeverk for effektiv produksjon av data med høy kvalitet.",
     "skills": [
       "Data Architecture",
@@ -240,7 +248,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://no.linkedin.com/jobs/view/l%C3%B8sningsarkitekt-dataplattformer-ai-og-dataops-at-capgemini-4459871133",
     "source": "LinkedIn / Capgemini",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data- og AI-ingeniør / arkitekt",
@@ -250,7 +259,7 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Kombinerer hands-on data engineering med arkitekturvalg, rådgivning og kundedialog. Bygger moderne dataplattformer og dataprodukter fra kildesystemintegrasjon til analyse og AI.",
     "skills": [
       "Databricks",
@@ -263,7 +272,8 @@ const jobs = [
     "salary": "Konkurransedyktig, ikke tallfestet",
     "url": "https://www.finn.no/job/ad/475453348",
     "source": "FINN",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer",
@@ -273,7 +283,7 @@ const jobs = [
     "seniority": "Mid-level",
     "workform": "Fast · remote mulig for riktig kandidat",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Designe og vedlikeholde pipelines og skalerbar dataarkitektur for EV-lading, energi og geodata. Arbeidet inkluderer BigQuery, transformasjoner og støtte til AI-/prognosemodeller.",
     "skills": [
       "GCP",
@@ -288,7 +298,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://www.thehub.io/jobs/676605473982c76f2ba6378a",
     "source": "The Hub",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Internship Data Engineer",
@@ -298,7 +309,7 @@ const jobs = [
     "seniority": "Internship",
     "workform": "Trainee/internship · fleksibel, remote mulig",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Jobbe sammen med senior data engineer og data science-/engineering-team om ETL, datalagring og skalerbar dataarkitektur innen geodata, EV-lading og energiprognoser.",
     "skills": [
       "GCP",
@@ -313,7 +324,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/476486230",
     "source": "FINN",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Platform Engineer",
@@ -323,7 +335,7 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Utforme datamodell, lagringsarkitektur, schema evolution og pipelines for høyfrekvent UAV-telemetri, logger og media. Tydelig greenfield/systemdesign-profil.",
     "skills": [
       "Data Platform",
@@ -337,7 +349,8 @@ const jobs = [
     "salary": "Competitive pay, ikke tallfestet",
     "url": "https://www.finn.no/job/ad/476485892",
     "source": "FINN",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer – Build the data foundation for the future of care",
@@ -347,7 +360,7 @@ const jobs = [
     "seniority": "Ikke oppgitt",
     "workform": "Fast/heltid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Bygge og forvalte datapipelines for sensor- og alarmdata i omsorgsteknologi. Rollen kombinerer databehandling, integrasjoner og backend-utvikling i et lite team.",
     "skills": [
       "Python",
@@ -362,30 +375,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/476485869",
     "source": "FINN",
-    "checkedAt": "2026-10-12"
-  },
-  {
-    "title": "Konsulent – Data Engineer",
-    "company": "Bouvet Norge",
-    "location": "Oslo",
-    "category": "Data Engineering",
-    "seniority": "Erfaren",
-    "workform": "Fast/konsulentrolle",
-    "deadline": "2026-10-16",
-    "status": "Verifisert 12.10.2026",
-    "summary": "Utvikle dataplattformer og analyseløsninger og gjøre kundedata tilgjengelige, pålitelige og anvendelige. Arbeider på tvers av flere sky- og dataplattformer.",
-    "skills": [
-      "Microsoft Fabric",
-      "Databricks",
-      "Azure",
-      "AWS",
-      "GCP",
-      "Data & Analytics"
-    ],
-    "salary": "Ikke oppgitt",
-    "url": "https://www.finn.no/job/ad/475459566",
-    "source": "FINN",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer – Data & AI",
@@ -395,7 +386,7 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid · delvis hjemmekontor",
     "deadline": "2026-11-12",
-    "status": "Verifisert 12.10.2026 – oppdatert annonse",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Designe og videreutvikle dataplattformer og pipelines i kundeprosjekter. Sikre kvalitet, skalerbarhet og data governance i Experis sitt Cloud & Data-miljø. Krever minst fem års relevant erfaring.",
     "skills": [
       "Snowflake",
@@ -410,7 +401,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/477762388",
     "source": "FINN",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Architect",
@@ -420,7 +412,7 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid · konsulentrolle",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Rådgiverrolle i Data Strategy & Analytics som kobler forretningsstrategi, data og teknologi. Utformer skalerbare dataarkitekturer og veileder kunder på tvers av plattformer, governance og operating models.",
     "skills": [
       "Data Architecture",
@@ -433,7 +425,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://careers.capgemini.com/job/Oslo-Data-Architect/1402781633/",
     "source": "Capgemini Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer",
@@ -443,7 +436,7 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid · hybrid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Bygge og videreutvikle NOBA-konsernets datalandskap med Microsofts datastack, Databricks, dbt og ETL. Rollen finnes for Oslo/Stockholm og støtter bankens analyse- og dataplattform.",
     "skills": [
       "SQL",
@@ -456,7 +449,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://careers.noba.bank/jobs/6536967-data-engineer",
     "source": "NOBA Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Lead Data Architect",
@@ -466,7 +460,7 @@ const jobs = [
     "seniority": "Lead",
     "workform": "Fast, heltid · hybrid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Lede design og implementering av moderne dataarkitektur og dataplattformer, veilede data engineers og jobbe strategisk med kunder. Stack inkluderer blant annet Kafka, Spark, dbt, Snowflake, BigQuery, Synapse og Databricks.",
     "skills": [
       "Data Architecture",
@@ -481,7 +475,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://jobs.digital.orange-business.com/jobs/6575684-lead-data-architect",
     "source": "Orange Business Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer",
@@ -491,7 +486,7 @@ const jobs = [
     "seniority": "Ikke oppgitt",
     "workform": "Fast, heltid · hybrid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Konsulentrolle i Orange Business Data & AI med moderne datapipelines, batch/stream-prosessering og dataplattformer for større kunder. Rollen er aktiv i Oslo og vurderes fortløpende.",
     "skills": [
       "Data Engineering",
@@ -504,7 +499,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://jobs.digital.orange-business.com/jobs/6575786-data-engineer",
     "source": "Orange Business Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer",
@@ -514,7 +510,7 @@ const jobs = [
     "seniority": "Ikke oppgitt",
     "workform": "Fast, heltid · hybrid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Bygge og videreutvikle moderne dataplattformer, pipelines og ETL/ELT-prosesser i et sterkt open-source- og cloudmiljø. Rollen dekker datamodellering, datakvalitet, store datamengder og samarbeid med arkitekter og DevOps.",
     "skills": [
       "SQL",
@@ -529,7 +525,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://careers.redpill-linpro.com/jobs/8272403-data-engineer",
     "source": "Redpill Linpro Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Platform Engineer",
@@ -539,7 +536,7 @@ const jobs = [
     "seniority": "Ikke oppgitt",
     "workform": "Fast, heltid · delvis hjemmekontor",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Konsulentrolle med fokus på data platform engineering og plattformarkitektur. Arbeider med Snowflake, Databricks eller Fabric og sikre, skalerbare løsninger på Azure, AWS eller GCP.",
     "skills": [
       "Snowflake",
@@ -553,7 +550,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://twodaynorway.teamtailor.com/jobs/6470660-data-platform-engineer",
     "source": "twoday Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Migration Engineer",
@@ -563,7 +561,7 @@ const jobs = [
     "seniority": "Ikke oppgitt",
     "workform": "Fast, heltid · hybrid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Migrere og konsolidere komplekse nett- og utility-data til en felles ADMS-plattform. Rollen omfatter ETL-prosesser, migreringspipelines, datavalidering, datakvalitet og samarbeid med dataarkitekter og integrasjonsteam.",
     "skills": [
       "ETL",
@@ -578,7 +576,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://careers.cognizant.com/emea-en/jobs/00070333131/data-migration-engineer/",
     "source": "Cognizant Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Azure Data Engineer",
@@ -588,7 +587,7 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid · konsulentrolle",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Bygge Microsoft-baserte data- og analyseløsninger i BearingPoints Data & AI-miljø. Rollen er del av en spisset satsing på Azure Data Engineering og moderne dataplattformer.",
     "skills": [
       "Azure",
@@ -600,7 +599,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://no.linkedin.com/jobs/view/azure-data-engineer%E2%80%AF-at-bearingpoint-4460246424",
     "source": "LinkedIn / BearingPoint",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Azure Data Platform Engineer",
@@ -610,7 +610,7 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid · konsulentrolle",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Bygge opp BearingPoints satsing på Azure og Data Platform Engineering. Fokus på moderne Microsoft-dataplattformer i et stort Data & Analytics-miljø.",
     "skills": [
       "Azure",
@@ -622,7 +622,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://no.linkedin.com/jobs/view/azure-data-platform-engineer%E2%80%AF-at-bearingpoint-4460243419",
     "source": "LinkedIn / BearingPoint",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer",
@@ -632,7 +633,7 @@ const jobs = [
     "seniority": "Junior",
     "workform": "Fast, heltid · konsulentrolle",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Data Engineer i BearingPoints Data & Analytics-miljø, med prosjekter innen Data Engineering, Data Science, Data Advisory og Data Governance. Rollen retter seg mot utvikling av datadrevne løsninger for norske virksomheter.",
     "skills": [
       "Data Engineering",
@@ -643,7 +644,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://no.linkedin.com/jobs/view/data-engineer-at-bearingpoint-4463966688",
     "source": "LinkedIn / BearingPoint",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Head of Fabric Platform",
@@ -653,7 +655,7 @@ const jobs = [
     "seniority": "Lead",
     "workform": "Fast, heltid · konsulentrolle",
     "deadline": "Snarest",
-    "status": "Kontrollert 12.10.2026 – annonse i arbeidsgivers søkeindeks",
+    "status": "Kontrollert 19.10.2026 – karriereside i søkeindeks",
     "summary": "Faglig leder for SoftwareOnes Microsoft Fabric-satsing i Oslo, samtidig som rollen er hands-on arkitekt og teknisk lead i kundeprosjekter. Omfatter dataplattform, modellering, integrasjon, governance og rapportering.",
     "skills": [
       "Microsoft Fabric",
@@ -666,7 +668,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://careers.softwareone.com/jobs/30045?lang=en-us",
     "source": "SoftwareOne Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer",
@@ -676,7 +679,7 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid · on-site",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Eierskap til dataarkitektur, pipelines og verktøy som danner grunnlag for AI-systemer og andre datatunge løsninger. Konsulentrolle i et spesialisert AI- og datamiljø.",
     "skills": [
       "Data Architecture",
@@ -688,7 +691,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://careers.pmm.tech/jobs/5815589-senior-data-engineer",
     "source": "People Made Machines Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Head of Data Engineering",
@@ -698,7 +702,7 @@ const jobs = [
     "seniority": "Lead",
     "workform": "Fast, heltid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Lede Data Engineering-faget, sette teknisk retning, ta arkitekturvalg og veilede andre ingeniører. Rollen kombinerer fagledelse, kundeprosjekter og arbeid med Snowflake, Databricks, Fabric eller BigQuery.",
     "skills": [
       "Snowflake",
@@ -712,7 +716,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://careers.pmm.tech/jobs/6112624-head-of-data-engineering",
     "source": "People Made Machines Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer og AI-utvikler",
@@ -722,7 +727,7 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid · konsulentrolle",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Bygge og videreutvikle moderne dataplattformer, robuste dataflyter, analyse- og AI-løsninger hos kunder. Kombinerer klassisk data engineering med AI-utvikling og AI-støttede arbeidsmetoder.",
     "skills": [
       "Data Platforms",
@@ -734,7 +739,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://careers-no.fortedigital.com/jobs/7834466-data-engineer-og-ai-utvikler",
     "source": "Forte Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer",
@@ -744,19 +750,23 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid · on-site",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
-    "summary": "Bygge bro mellom data, operasjon og beslutninger i Antire Analytics. Fokus på robuste dataflyter og moderne Microsoft-baserte dataløsninger for blant annet energi, offshore og shipping.",
+    "status": "Kontrollert 19.10.2026",
+    "summary": "Bygge og drifte Azure-baserte datapipelines, datasjøer og ETL/ELT-prosesser. Arbeide med automatisert infrastruktur, CI/CD, overvåking og tilgangsstyring fra kilde til beslutningsstøtte.",
     "skills": [
+      "Azure Data Factory",
+      "Synapse Analytics",
       "Microsoft Fabric",
-      "Databricks",
-      "Spark",
-      "Data Engineering",
-      "Data Architecture"
+      "PySpark",
+      "SQL",
+      "ADLS Gen2",
+      "Terraform",
+      "Azure DevOps"
     ],
     "salary": "Ikke oppgitt",
-    "url": "https://no.linkedin.com/jobs/view/senior-data-engineer-at-antire-4465543384",
-    "source": "LinkedIn / Antire",
-    "checkedAt": "2026-10-12"
+    "url": "https://antire.recruitee.com/o/senior-data-engineer",
+    "source": "Antire – karriereside",
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer",
@@ -766,7 +776,7 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid · konsulentrolle",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Designe og bygge datapipelines, datamodeller og ETL/ELT-løsninger, ofte med ansvar for arkitektur og teknisk retning hos kunder. Bred stack på tvers av Databricks, Snowflake, Fabric og de store skyplattformene.",
     "skills": [
       "Databricks",
@@ -781,7 +791,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://no.linkedin.com/jobs/view/data-engineer-at-accelerate-norge-4433836117",
     "source": "LinkedIn / Accelerate",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer",
@@ -791,7 +802,7 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid · hybrid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Designe, utvikle og vedlikeholde skalerbare datapipelines, ETL-prosesser, dataplattformer og datavarehus i kundeprosjekter. Inkluderer datamodellering, datakvalitet og governance.",
     "skills": [
       "SQL",
@@ -806,57 +817,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://no.linkedin.com/jobs/view/senior-data-engineer-at-altro-4464336484",
     "source": "LinkedIn / Altro",
-    "checkedAt": "2026-10-12"
-  },
-  {
-    "title": "Data Engineer",
-    "company": "Bane NOR",
-    "location": "Oslo",
-    "category": "Data Engineering",
-    "seniority": "Erfaren",
-    "workform": "Fast, heltid · delvis hjemmekontor",
-    "deadline": "2026-10-12",
-    "status": "Verifisert 12.10.2026",
-    "summary": "Bygge dataflyter og dataprodukter for smartere tog og jernbane, med eventdrevet arkitektur, sensorintegrasjon og moderne engineering-praksis. Rollen kombinerer programmering, CI/CD, IaC og Databricks.",
-    "skills": [
-      "Python",
-      "PySpark",
-      "Databricks",
-      "Kafka",
-      "CI/CD",
-      "IaC",
-      "Sensors",
-      "Data Products"
-    ],
-    "salary": "Ikke oppgitt",
-    "url": "https://arbeidsplassen.nav.no/stillinger/stilling/b862e715-e803-4789-9e7e-bad2dbc82ac8",
-    "source": "Arbeidsplassen",
-    "checkedAt": "2026-10-12"
-  },
-  {
-    "title": "Senior Data Engineer – Storebrand Pensjonstjenester",
-    "company": "Storebrand",
-    "location": "Bærum · Lysaker",
-    "category": "Data Engineering",
-    "seniority": "Senior",
-    "workform": "Fast, heltid",
-    "deadline": "2026-10-12",
-    "status": "Verifisert 12.10.2026",
-    "summary": "Etablere og videreutvikle dataløsninger på Snowflake og dbt og bygge robuste datapipelines for Storebrand Pensjonstjenester. Rollen inkluderer datamodellering, CI/CD, DevOps og moderne datautvikling.",
-    "skills": [
-      "Snowflake",
-      "dbt",
-      "SQL",
-      "Data Modelling",
-      "Python",
-      "Dagster",
-      "GitHub Actions",
-      "Terraform"
-    ],
-    "salary": "Ikke oppgitt",
-    "url": "https://www.finn.no/job/ad/477051441",
-    "source": "FINN",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Ops Engineer",
@@ -866,7 +828,7 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid · hybrid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "DataOps-konsulent i Orange Business Data & AI med ansvar for stabile dataplattformer og dataflyter på tvers av batch- og stream-workloads. Rollen er aktiv i Oslo og vurderes fortløpende.",
     "skills": [
       "DataOps",
@@ -879,7 +841,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://jobs.digital.orange-business.com/jobs/6575546-data-ops-engineer",
     "source": "Orange Business Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer / Data Scientist",
@@ -889,7 +852,7 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid · delvis hjemmekontor",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Konsulentrolle der Data Engineering er ett av hovedsporene: oversette forretningsbehov til robuste dataarkitekturer og levere datadrevne løsninger i tverrfaglige team. Rollen kombinerer moderne dataplattformer, analyse og AI.",
     "skills": [
       "Data Engineering",
@@ -902,7 +865,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://twodaynorway.teamtailor.com/jobs/6469045-senior-data-engineer-data-scientist",
     "source": "twoday Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data & Machine Learning Engineers",
@@ -912,7 +876,7 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid · hybrid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Bygge moderne dataplattformer, robuste datapipelines og datamodeller for norske industri- og produksjonskunder, med mulighet til å jobbe med maskinlæring der det er relevant.",
     "skills": [
       "Python",
@@ -927,7 +891,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://careers.tieto.com/job/data-and-machine-learning-engineers-tieto-tech-consulting-m-f-d-in-fornebu-norway-jid-2861",
     "source": "Tieto Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer",
@@ -937,7 +902,7 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid · konsulentrolle",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Utvikle avanserte dataplattformer og dataløsninger for store kunder, med høye krav til kvalitet, sikkerhet og skalerbarhet. Rollen dekker pipelines, datamodellering, cloud og DevOps-praksis.",
     "skills": [
       "Azure",
@@ -952,7 +917,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://careers.capgemini.com/job/Oslo-Senior-Data-Engineer/1400786033/",
     "source": "Capgemini Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Løsningsarkitekt - Data, analyse og KI",
@@ -962,7 +928,7 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid · hybrid",
     "deadline": "2026-10-30",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Binde sammen forretningsbehov, dataplattform, KI-komponenter og integrasjoner til produksjonsklare løsninger. Omfatter lakehouse/warehouse, skystrategi, RAG, agentiske løsninger og ansvarlig KI.",
     "skills": [
       "Data Architecture",
@@ -977,7 +943,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://afry.com/pt-br/carreira/vagas-disponiveis/REF14823K-losningsarkitekt-data-analyse-og-ki",
     "source": "AFRY Careers",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer",
@@ -987,7 +954,7 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid",
     "deadline": "2026-10-19",
-    "status": "Verifisert 12.10.2026",
+    "status": "Kontrollert 19.10.2026",
     "summary": "Bygge robuste datapipelines og datamodeller for analyse, rapportering og AI i EY Technology Consulting. Rollen dekker datainnhenting, transformasjon, modellering og moderne skybaserte dataplattformer.",
     "skills": [
       "Python",
@@ -1002,32 +969,8 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/477279633",
     "source": "FINN",
-    "checkedAt": "2026-10-12"
-  },
-  {
-    "title": "Data Engineer",
-    "company": "Nettbil",
-    "location": "Oslo · Økern",
-    "category": "Data Engineering",
-    "seniority": "Erfaren",
-    "workform": "Fast, heltid",
-    "deadline": "2026-10-12",
-    "status": "Verifisert 12.10.2026",
-    "summary": "Ta eierskap til og videreutvikle Nettbils dataplattform og bygge løsninger som gir analytikere og produktteam et robust beslutningsgrunnlag. Rollen kombinerer dataplattform, arkitektur og produktnær data engineering.",
-    "skills": [
-      "PostgreSQL",
-      "Redshift",
-      "dbt",
-      "Python",
-      "AWS",
-      "Kubernetes",
-      "TypeScript",
-      "Node.js"
-    ],
-    "salary": "Ikke oppgitt",
-    "url": "https://www.finn.no/job/ad/477266077",
-    "source": "FINN",
-    "checkedAt": "2026-10-12"
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer",
@@ -1037,8 +980,8 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid",
     "deadline": "2026-10-30",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Utvikle datamodeller og integrasjoner på selskapets dataplattform. Bidra til tekniske valg, testing og standarder i et IT-miljø under oppbygging.",
     "skills": [
       "Snowflake",
@@ -1051,7 +994,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/477720621",
-    "source": "FINN"
+    "source": "FINN",
+    "addedInUpdate": null
   },
   {
     "title": "Senior dataingeniør – Datasjø",
@@ -1061,8 +1005,8 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid · delvis hjemmekontor",
     "deadline": "2026-10-27",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Videreutvikle dataplattform, datamodeller og dataflyt i DFØ. Gjøre data tilgjengelige gjennom API-er og bidra til kvalitet og forvaltning.",
     "skills": [
       "ETL/ELT",
@@ -1073,7 +1017,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/478236556",
-    "source": "FINN"
+    "source": "FINN",
+    "addedInUpdate": null
   },
   {
     "title": "Data Manager",
@@ -1083,8 +1028,8 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid",
     "deadline": "2026-10-27",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Forvalte datakatalog, metadata og datasett gjennom hele livsløpet. Koordinere dataeiere og fagmiljøer og utvikle rutiner for datastyring. Krever norsk statsborgerskap og sikkerhetsklarering.",
     "skills": [
       "Metadata",
@@ -1096,7 +1041,8 @@ const jobs = [
     ],
     "salary": "690 000–830 000 kr",
     "url": "https://www.finn.no/job/ad/478090357",
-    "source": "FINN"
+    "source": "FINN",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer",
@@ -1106,8 +1052,8 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid · delvis hjemmekontor",
     "deadline": "2026-10-20",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Bygge datapipelines og dataprodukter i tverrfaglige team for kollektivtransport. Ansvar fra innhenting og modellering til kvalitet, dokumentasjon og tilgjengeliggjøring.",
     "skills": [
       "SQL",
@@ -1120,30 +1066,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://tetdigital.no/ledige-stillinger/5191363720",
-    "source": "Tet Digital / FINN"
-  },
-  {
-    "title": "Produktleder – Dataplattform",
-    "company": "Tet Digital",
-    "location": "Oslo",
-    "category": "Data Platform",
-    "seniority": "Lead",
-    "workform": "Fast, heltid",
-    "deadline": "2026-10-15",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
-    "summary": "Sette retning og veikart for dataplattformen og koordinere brukere og fagmiljøer. Videreutvikle datakatalog, metadata og plattformtjenester i samarbeid med teknisk leder.",
-    "skills": [
-      "Produktledelse",
-      "Data Governance",
-      "DataHub",
-      "Snowflake",
-      "dbt",
-      "MLOps"
-    ],
-    "salary": "Ikke oppgitt",
-    "url": "https://arbeidsplassen.nav.no/stillinger/stilling/ab559cd1-a7b5-4902-850c-b909c78770dc",
-    "source": "NAV / Arbeidsplassen"
+    "source": "Tet Digital / FINN",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer / Data Platform Engineer",
@@ -1153,8 +1077,8 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid",
     "deadline": "2026-11-01",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Utvikle og drifte datapipelines og dataplattformer i kundeprosjekter. Jobbe med modellering, datakvalitet, ytelse og infrastruktur som kode i et ansatteid miljø.",
     "skills": [
       "Python",
@@ -1169,7 +1093,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://arbeidsplassen.nav.no/stillinger/stilling/508ce641-bf73-4ddf-8a8b-aa11f6fc0dbd",
-    "source": "NAV / Arbeidsplassen"
+    "source": "NAV / Arbeidsplassen",
+    "addedInUpdate": null
   },
   {
     "title": "Data- og analyseingeniør / Analytics Engineer",
@@ -1179,8 +1104,8 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid",
     "deadline": "Løpende",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Bygge datapipelines og datamodeller for analyse og rapportering i kundeoppdrag. Fast ansettelse med mulighet for medeierskap og en åpen lønnsmodell.",
     "skills": [
       "SQL",
@@ -1193,7 +1118,8 @@ const jobs = [
     ],
     "salary": "Åpen lønnsmodell, se karrieresiden",
     "url": "https://clef.no/karriere/data-engineer",
-    "source": "CLEF Careers"
+    "source": "CLEF Careers",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer",
@@ -1203,8 +1129,8 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Utvikle dataplattformer, datapipelines og datamodeller i kundeprosjekter. Bidra til arkitektur og teknologivalg i et etablert seniormiljø.",
     "skills": [
       "Python",
@@ -1218,7 +1144,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://rekruttering.jpro.no/jobs/6276100-senior-data-engineer",
-    "source": "JPro Careers"
+    "source": "JPro Careers",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer",
@@ -1228,8 +1155,8 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid",
     "deadline": "Ikke oppgitt",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Bygge dataarkitektur og pipelines for industrielle kunder på Cognite Data Fusion. Samarbeide med løsningsarkitekter og bidra med veiledning av andre dataingeniører.",
     "skills": [
       "Cognite Data Fusion",
@@ -1241,7 +1168,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://job-boards.greenhouse.io/cognite/jobs/4986979101",
-    "source": "Cognite / Greenhouse"
+    "source": "Cognite / Greenhouse",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer II",
@@ -1251,8 +1179,8 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid",
     "deadline": "Ikke oppgitt",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Utvikle integrasjoner og pipelines for industrielle data. Modellere og kvalitetssikre data, gjennomføre kodegjennomgang og bidra til verktøy og SDK-er.",
     "skills": [
       "Cognite Data Fusion",
@@ -1266,31 +1194,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://job-boards.greenhouse.io/cognite/jobs/4986981101",
-    "source": "Cognite / Greenhouse"
-  },
-  {
-    "title": "Data Engineer",
-    "company": "Gjensidige Pensjonsforsikring",
-    "location": "Oslo",
-    "category": "Data Engineering",
-    "seniority": "Erfaren",
-    "workform": "Fast, heltid",
-    "deadline": "2026-10-15",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
-    "summary": "Videreutvikle dataplattform og dataprodukter for pensjonsvirksomheten. Sikre datakvalitet, tester og dokumentasjon sammen med dataeiere og analytikere.",
-    "skills": [
-      "Databricks",
-      "dbt",
-      "SQL",
-      "Python",
-      "GitHub",
-      "CI/CD",
-      "Data Governance"
-    ],
-    "salary": "Ikke oppgitt",
-    "url": "https://www.finn.no/job/ad/477589471",
-    "source": "FINN"
+    "source": "Cognite / Greenhouse",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer",
@@ -1300,8 +1205,8 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Utvikle dataløsninger i kundeprosjekter og bidra til moderne dataplattformer. Søknader vurderes fortløpende i selskapets Data Intelligence-miljø.",
     "skills": [
       "Data Engineering",
@@ -1311,7 +1216,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://careers.soprasteria.no/job/data-engineer-in-oslo-norway-jid-7465",
-    "source": "Sopra Steria Careers"
+    "source": "Sopra Steria Careers",
+    "addedInUpdate": null
   },
   {
     "title": "Data/AI Governance Rådgiver",
@@ -1321,8 +1227,8 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Operasjonalisere datastyring og ansvarlig bruk av KI hos kunder. Arbeide med metadata, datakatalog, lineage, informasjonsmodeller og policyer.",
     "skills": [
       "Microsoft Purview",
@@ -1334,7 +1240,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://careers.soprasteria.no/job/data-ai-governance-radgiver-in-oslo-norway-jid-8628",
-    "source": "Sopra Steria Careers"
+    "source": "Sopra Steria Careers",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer",
@@ -1344,8 +1251,8 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid",
     "deadline": "Ikke oppgitt",
-    "status": "Verifisert i arbeidsgivers stillingsoversikt 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Videreutvikle dataplattform og datavarehus med agentbasert automatisering. Eie dataflyt fra innhenting til semantisk lag og samarbeide med analytikere og forretningsmiljøer.",
     "skills": [
       "BigQuery",
@@ -1357,7 +1264,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://kahoot.com/open-positions/",
-    "source": "Kahoot! – åpne stillinger"
+    "source": "Kahoot! – åpne stillinger",
+    "addedInUpdate": null
   },
   {
     "title": "Data Operations Engineer (DataOps / Data Reliability)",
@@ -1367,8 +1275,8 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Eie daglig drift og overvåking av datajobber for eiendoms- og selskapsdata. Feilsøke avvik, forbedre ferskhet og kvalitet og vedlikeholde driftsdokumentasjon.",
     "skills": [
       "Azure Data Factory",
@@ -1380,7 +1288,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/477070213",
-    "source": "FINN"
+    "source": "FINN",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer",
@@ -1390,8 +1299,8 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid",
     "deadline": "Snarest",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Bygge og drifte dataflyt og modeller for norske og svenske eiendoms- og selskapsregistre. Videreutvikle API-er, søkeindekser og MCP-servere.",
     "skills": [
       "SQL Server",
@@ -1405,7 +1314,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/477069909",
-    "source": "FINN"
+    "source": "FINN",
+    "addedInUpdate": null
   },
   {
     "title": "BI-arkitekt – Microsoft Fabric",
@@ -1415,8 +1325,8 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid",
     "deadline": "2026-11-01",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Lede teknisk videreutvikling av Avinors dataplattform på Microsoft Fabric. Veilede utviklere og sette praksis for arkitektur, utvikling, utrulling og datakvalitet.",
     "skills": [
       "Microsoft Fabric",
@@ -1430,7 +1340,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://arbeidsplassen.nav.no/stillinger/stilling/9980df9a-6f1d-4d76-a18a-cb3ce44cc466",
-    "source": "NAV / Arbeidsplassen"
+    "source": "NAV / Arbeidsplassen",
+    "addedInUpdate": null
   },
   {
     "title": "Datavarehusutvikler – Data Engineer",
@@ -1440,8 +1351,8 @@ const jobs = [
     "seniority": "Erfaren",
     "workform": "Fast, heltid",
     "deadline": "2026-11-08",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Utvikle datamodeller og dataflyt i finanskonsernets datavarehus. Bidra til innføring av ny kjernebankplattform, datakvalitet og sporbarhet.",
     "skills": [
       "Snowflake",
@@ -1454,7 +1365,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/478153347",
-    "source": "FINN"
+    "source": "FINN",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Platform Engineer",
@@ -1464,8 +1376,8 @@ const jobs = [
     "seniority": "Senior",
     "workform": "Fast, heltid · delvis hjemmekontor",
     "deadline": "2026-10-26",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
     "summary": "Utvikle selvbetjent dataplattform og verktøy for datafagmiljøene. Ta tekniske valg og sikre stabilitet, tilgangsstyring og en god utvikleropplevelse.",
     "skills": [
       "Databricks",
@@ -1478,30 +1390,8 @@ const jobs = [
     ],
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/478034067",
-    "source": "FINN"
-  },
-  {
-    "title": "Seniorkonsulent – teknisk kartlegging og programmering (Data Engineer)",
-    "company": "Omega365 – oppdrag hos DSA",
-    "location": "Bærum / Østerås",
-    "category": "Data Engineering",
-    "seniority": "Senior",
-    "workform": "Konsulentoppdrag · november–desember 2026, mulig forlengelse",
-    "deadline": "2026-10-13",
-    "summary": "Kartlegge databaser, dataflyt og integrasjoner som grunnlag for DSAs helhetlige måledatasystem. Arbeide med datauttrekk, dokumentasjon, programmering og tilgangsstyring. Søknadsfrist 13. oktober kl. 12.00.",
-    "skills": [
-      "SQL",
-      "Datamodellering",
-      "Dataintegrasjon",
-      "Microsoft Entra ID",
-      "API",
-      "Datakvalitet"
-    ],
-    "url": "https://www.omega365.com/jobs/jobinfo/73578",
-    "source": "Omega365",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
-    "salary": "Ikke oppgitt"
+    "source": "FINN",
+    "addedInUpdate": null
   },
   {
     "title": "AI Governance Lead",
@@ -1522,31 +1412,10 @@ const jobs = [
     ],
     "url": "https://www.finn.no/job/ad/478006753",
     "source": "FINN",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
-    "salary": "Ikke oppgitt"
-  },
-  {
-    "title": "Avtaleadministrator – Masterdata",
-    "company": "Anticimex",
-    "location": "Oslo / Bryn",
-    "category": "Data Management",
-    "seniority": "Erfaren",
-    "workform": "Vikariat, heltid · desember 2026–desember 2027",
-    "deadline": "2026-10-18",
-    "summary": "Opprette, vedlikeholde og kvalitetssikre kunde-, kontrakts- og prisdata i Masterdata-teamet. Følge opp avvik og forbedre rutiner ved hjelp av Excel og god systemforståelse.",
-    "skills": [
-      "Masterdata",
-      "Datakvalitet",
-      "Excel",
-      "Dynamics 365 Business Central",
-      "Avviksbehandling"
-    ],
-    "url": "https://www.finn.no/job/ad/477223421",
-    "source": "FINN",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
-    "salary": "Ikke oppgitt"
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
+    "salary": "Ikke oppgitt",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Dataarkitekt",
@@ -1569,9 +1438,10 @@ const jobs = [
     ],
     "url": "https://sonat.no/work/senior-dataarkitekt",
     "source": "Sonat – karriereside",
-    "status": "Verifisert 12.10.2026",
-    "checkedAt": "2026-10-12",
-    "salary": "Ikke oppgitt"
+    "status": "Kontrollert 19.10.2026",
+    "checkedAt": "2026-10-19",
+    "salary": "Ikke oppgitt",
+    "addedInUpdate": null
   },
   {
     "title": "Senior Data Engineer",
@@ -1595,8 +1465,9 @@ const jobs = [
     "salary": "780 000–1 025 000 kr",
     "url": "https://www.finn.no/job/ad/478567335",
     "source": "FINN",
-    "checkedAt": "2026-10-12",
-    "status": "Verifisert 12.10.2026"
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": null
   },
   {
     "title": "Senior integrasjonsutvikler",
@@ -1620,8 +1491,9 @@ const jobs = [
     "salary": "750 000–900 000 kr",
     "url": "https://www.finn.no/job/ad/477633247",
     "source": "FINN",
-    "checkedAt": "2026-10-12",
-    "status": "Verifisert 12.10.2026"
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": null
   },
   {
     "title": "Data Engineer",
@@ -1645,8 +1517,9 @@ const jobs = [
     "salary": "750 000–1 000 000 kr",
     "url": "https://www.finn.no/job/ad/478567110",
     "source": "FINN",
-    "checkedAt": "2026-10-12",
-    "status": "Verifisert 12.10.2026"
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": null
   },
   {
     "title": "Senior dataplattformutvikler",
@@ -1670,8 +1543,9 @@ const jobs = [
     "salary": "900 000–1 025 000 kr",
     "url": "https://www.finn.no/job/ad/478568300",
     "source": "FINN",
-    "checkedAt": "2026-10-12",
-    "status": "Verifisert 12.10.2026"
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": null
   },
   {
     "title": "Senior ML-plattform Utvikler",
@@ -1695,8 +1569,9 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/478569640",
     "source": "FINN",
-    "checkedAt": "2026-10-12",
-    "status": "Verifisert 12.10.2026"
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": null
   },
   {
     "title": "Tech lead – Data plattform",
@@ -1719,8 +1594,9 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/478544889",
     "source": "FINN",
-    "checkedAt": "2026-10-12",
-    "status": "Verifisert 12.10.2026"
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": null
   },
   {
     "title": "Leder Datautvikling",
@@ -1744,8 +1620,9 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/478152399",
     "source": "FINN",
-    "checkedAt": "2026-10-12",
-    "status": "Verifisert 12.10.2026"
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": null
   },
   {
     "title": "Avdelingsdirektør utvikling",
@@ -1766,8 +1643,9 @@ const jobs = [
     "salary": "1 050 000–1 280 000 kr",
     "url": "https://www.finn.no/job/ad/478217521",
     "source": "FINN",
-    "checkedAt": "2026-10-12",
-    "status": "Verifisert 12.10.2026"
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": null
   },
   {
     "title": "Dataanalytiker – regulatoriske dataløsninger",
@@ -1791,8 +1669,9 @@ const jobs = [
     "salary": "Ikke oppgitt",
     "url": "https://www.finn.no/job/ad/478574515",
     "source": "FINN",
-    "checkedAt": "2026-10-12",
-    "status": "Verifisert 12.10.2026"
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": null
   },
   {
     "title": "Rådgiver M365 og Informasjonsstyring",
@@ -1814,59 +1693,289 @@ const jobs = [
     "salary": "600 000–800 000 kr",
     "url": "https://www.finn.no/job/ad/478074901",
     "source": "FINN",
-    "checkedAt": "2026-10-12",
-    "status": "Verifisert 12.10.2026"
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": null
   },
   {
-    "title": "Trainee innen Teknologi og innovasjon – Data governance og dataplattform",
-    "company": "Statnett",
-    "location": "Oslo / Nydalen",
-    "category": "Data Governance",
-    "seniority": "Junior / Trainee",
-    "workform": "Fast, heltid · traineeprogram med oppstart september 2027",
-    "deadline": "2026-10-18",
-    "summary": "18 måneders traineeprogram med rotasjoner, etterfulgt av tilknytning til seksjon Data governance og dataplattform. Fagområdet omfatter datastyring, informasjonsarkitektur, datakatalog og datadeling.",
-    "skills": [
-      "Data Governance",
-      "Dataforvaltning",
-      "Informasjonsarkitektur",
-      "Datakatalog",
-      "Dataplattform",
-      "AI Governance"
-    ],
     "salary": "Ikke oppgitt",
-    "url": "https://903000.webcruiter.no/Main2/recruit/public/5167544616?language=&url_org=903000&use_position_site_header=0",
-    "source": "Statnett / Webcruiter",
-    "checkedAt": "2026-10-12",
-    "status": "Verifisert 12.10.2026"
+    "company": "Vend",
+    "title": "Junior Data Engineer",
+    "location": "Oslo (alternativt Stockholm)",
+    "category": "Data Engineering",
+    "seniority": "Junior",
+    "workform": "Fast, heltid · inntil tre dager hjemmekontor",
+    "deadline": "2026-11-01",
+    "summary": "Bygge felles dataprodukter for rubrikkannonser og transaksjoner som brukes til analyse og KI. Arbeide med datamodellering, kvalitet og forvaltning i et nordisk team. Omtrent to–tre års relevant erfaring ønskes.",
+    "skills": [
+      "Snowflake",
+      "SQL",
+      "dbt",
+      "Python",
+      "Datamodellering",
+      "Data Quality"
+    ],
+    "url": "https://www.finn.no/job/ad/478693710",
+    "source": "FINN",
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": "2026-10-19"
   },
   {
-    "title": "Integrasjonsutvikler",
-    "company": "Statnett",
-    "location": "Oslo / Nydalen (andre kontorer mulig)",
-    "category": "Data Integration",
+    "salary": "785 000–980 000 kr",
+    "company": "Etterretningstjenesten",
+    "title": "Senior Data Product Engineer",
+    "location": "Oslo / Hellerud",
+    "category": "Data Engineering",
+    "seniority": "Senior",
+    "workform": "Fast, heltid",
+    "deadline": "2026-11-03",
+    "summary": "Teknisk fagledelse kombinert med utvikling og drift av gjenbrukbare dataprodukter. Etablere standarder, metodikk og kvalitetssikring og samarbeide med analyse- og plattformteam. Krever utelukkende norsk statsborgerskap og høyeste sikkerhetsklarering.",
+    "skills": [
+      "Python",
+      "SQL",
+      "R",
+      "Dataprodukter",
+      "Datakvalitet",
+      "Data Platform",
+      "Fagledelse"
+    ],
+    "url": "https://www.finn.no/job/ad/478638662",
+    "source": "FINN",
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": "2026-10-19"
+  },
+  {
+    "salary": "Ikke oppgitt",
+    "company": "Stingray Marine Solutions",
+    "title": "Analytics Engineer",
+    "location": "Oslo / Grorud",
+    "category": "Analytics Engineering",
     "seniority": "Erfaren",
     "workform": "Fast, heltid",
-    "deadline": "2026-10-12",
-    "summary": "Utvikle API-er og integrasjoner mellom forretningssystemer og plattformer. Arbeide med hendelsesbasert dataflyt, datakvalitet, automatisert testing og overvåking. Krever sikkerhetsklarering.",
+    "deadline": "2026-11-08",
+    "summary": "Utvikle datamodeller, semantiske modeller og analysegrunnlag for havbruksteknologi. Sikre konsistente og gjenbrukbare data gjennom testing, dokumentasjon og standardisering i Data Platform-teamet. Minst tre års relevant erfaring.",
     "skills": [
-      "Java",
-      "Kotlin",
-      "REST API",
-      "Spring Boot",
-      "Kafka",
       "SQL",
-      "Kubernetes",
-      "CI/CD"
+      "dbt",
+      "Power BI",
+      "Snowflake",
+      "Python",
+      "GitLab",
+      "CI/CD",
+      "Datakvalitet"
     ],
+    "url": "https://www.finn.no/job/ad/478842301",
+    "source": "FINN",
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": "2026-10-19"
+  },
+  {
     "salary": "Ikke oppgitt",
-    "url": "https://903000.webcruiter.no/Main2/recruit/public/5179157079?language=&url_org=903000&use_position_site_header=0",
-    "source": "Statnett / Webcruiter",
-    "checkedAt": "2026-10-12",
-    "status": "Verifisert 12.10.2026"
+    "company": "Strawberry",
+    "title": "CRM & Loyalty Platform Specialist",
+    "location": "Oslo / Frogner",
+    "category": "MDM / Data Quality",
+    "seniority": "Junior / Erfaren",
+    "workform": "Via Academic Work · hybrid, ca. tre kontordager i uken",
+    "deadline": "Snarest",
+    "summary": "Kvalitetssikre kundeprofiler og medlemsdata, feilsøke dataflyt og teste nye løsninger i CRM- og lojalitetsplattformen. Tett oppfølging fra løsningsarkitekt og mulighet til å lære Salesforce Data 360.",
+    "skills": [
+      "Masterdata",
+      "Datakvalitet",
+      "SQL",
+      "Excel",
+      "Python",
+      "Salesforce",
+      "Dataflyt"
+    ],
+    "url": "https://www.academicwork.no/ledige-stillinger/j/liker-du-masterdata-struktur-og-komplekse-systemer/A34OJ6",
+    "source": "Academic Work / NAV Arbeidsplassen",
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": "2026-10-19"
+  },
+  {
+    "salary": "Ikke oppgitt",
+    "company": "Amedia",
+    "title": "Data & Analytics Engineer",
+    "location": "Oslo / Tollgården",
+    "category": "Analytics Engineering",
+    "seniority": "Erfaren",
+    "workform": "Fast",
+    "deadline": "Snarest",
+    "summary": "Modernisere dataflyt fra abonnementssystemer og markedsføring til BigQuery. Bygge dbt-modeller, dataprodukter og API-integrasjoner for personalisering, eksperimenter og rapportering. Rekrutteres gjennom Ansettr.",
+    "skills": [
+      "BigQuery",
+      "dbt",
+      "SQL",
+      "Python",
+      "API",
+      "Airflow",
+      "Dagster",
+      "Git"
+    ],
+    "url": "https://amediano.ansettr.no/ledige-stillinger/oslo-sentrum/data-analytics-engineer/",
+    "source": "Amedia / Ansettr",
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": "2026-10-19"
+  },
+  {
+    "salary": "Ikke oppgitt",
+    "company": "Aker Solutions",
+    "title": "AI Architect",
+    "location": "Bærum / Lysaker (andre kontorer mulig)",
+    "category": "Data Architecture",
+    "seniority": "Senior",
+    "workform": "Fast, heltid · hybrid",
+    "deadline": "2026-10-26",
+    "summary": "Nærliggende arkitekturrolle med ansvar for KI-løsninger, integrasjonsmønstre og data- og semantisk arkitektur. Utforme gjenbrukbare standarder for blant annet strukturert søk, vektorer og grafer, med innebygd styring og sikkerhet.",
+    "skills": [
+      "Azure",
+      "AI Architecture",
+      "Data Architecture",
+      "Semantisk arkitektur",
+      "Integrasjon",
+      "Governance",
+      "Vector / Graph"
+    ],
+    "url": "https://www.finn.no/job/ad/478004633",
+    "source": "FINN",
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": "2026-10-19"
+  },
+  {
+    "salary": "Ikke oppgitt",
+    "company": "Fraktal",
+    "title": "Erfaren Data Engineer",
+    "location": "Bærum / Fornebu (Oslo-kontoret)",
+    "category": "Data Engineering",
+    "seniority": "Erfaren",
+    "workform": "Konsulentrolle · delvis hjemmekontor",
+    "deadline": "Ikke oppgitt",
+    "summary": "Kartlegge kundebehov og bygge dataplattformer fra planlegging til ferdig løsning. Kombinere teknisk utvikling med rådgivning og kundeutvikling. Samme rolle annonseres også gjennom Mandag.ai.",
+    "skills": [
+      "SQL",
+      "Python",
+      "Azure",
+      "Microsoft Fabric",
+      "Snowflake",
+      "Databricks",
+      "dbt",
+      "BigQuery"
+    ],
+    "url": "https://fraktal.no/ledige-stillinger/erfaren-data-engineer/",
+    "source": "Fraktal – karriereside",
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": "2026-10-19"
+  },
+  {
+    "salary": "Ikke oppgitt",
+    "company": "Viljr",
+    "title": "Senior dataarkitekt",
+    "location": "Oslo",
+    "category": "Data Architecture",
+    "seniority": "Senior",
+    "workform": "Konsulentrolle · ansettelsesform ikke oppgitt",
+    "deadline": "Ikke oppgitt",
+    "summary": "Modernisere datavarehus og BI-løsninger og styrke dataforvaltning på tvers av distribuerte kilder. Koble prosesser, informasjonsarkitektur og tekniske løsninger, og kvalitetssikre leverandørleveranser.",
+    "skills": [
+      "Datamodellering",
+      "SQL",
+      "Azure Data",
+      "Snowflake",
+      "Data Management",
+      "Datastyring",
+      "BI"
+    ],
+    "url": "https://karriere.viljr.no/jobs/7733003-senior-dataarkitekt",
+    "source": "Viljr / Teamtailor",
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": "2026-10-19"
+  },
+  {
+    "salary": "Ikke oppgitt",
+    "company": "DN Media Group",
+    "title": "Head of Data & Insights",
+    "location": "Oslo",
+    "category": "Data Management",
+    "seniority": "Leder",
+    "workform": "Fast, heltid · på kontoret",
+    "deadline": "Snarest",
+    "summary": "Lede datastrategi, roadmap og et tverrfaglig team i Oslo og Dhaka. Ansvar for plattform, datakvalitet og governance samt analyse, KI og eksperimentering. Rapportere til CPTO og samarbeide tett med konsernledelsen.",
+    "skills": [
+      "GCP",
+      "BigQuery",
+      "Terraform",
+      "Airflow",
+      "dbt",
+      "Data Governance",
+      "Ledelse",
+      "Datastrategi"
+    ],
+    "url": "https://www.finn.no/job/ad/478544717",
+    "source": "FINN",
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": "2026-10-19"
+  },
+  {
+    "salary": "Ikke oppgitt",
+    "company": "DNV",
+    "title": "Data Analyst – Energy Systems",
+    "location": "Bærum / Høvik",
+    "category": "Analytics / BI",
+    "seniority": "Erfaren",
+    "workform": "Fast, heltid · hybrid",
+    "deadline": "2026-10-26",
+    "summary": "Nærliggende BI-rolle med utvikling av Power BI-løsninger, datamodeller og selvbetjent analyse. Forbedre datadefinisjoner, kvalitetssjekker og rapporteringsprosesser på tvers av Energy Systems. To–fire års relevant erfaring ønskes.",
+    "skills": [
+      "Power BI",
+      "Datamodellering",
+      "Datakvalitet",
+      "Excel",
+      "Power Query",
+      "DAX",
+      "Python",
+      "Lakehouse"
+    ],
+    "url": "https://www.finn.no/job/ad/478016076",
+    "source": "FINN",
+    "checkedAt": "2026-10-19",
+    "status": "Kontrollert 19.10.2026",
+    "addedInUpdate": "2026-10-19"
+  },
+  {
+    "salary": "Månedlig stipend etter UNDPs satser",
+    "company": "UNDP",
+    "title": "Internship – Data Governance",
+    "location": "Oslo",
+    "category": "Data Governance",
+    "seniority": "Internship",
+    "workform": "Internship · seks måneder · planlagt oppstart januar 2027",
+    "deadline": "2026-10-25",
+    "summary": "Støtte Global Policy Centre for Governance med forskning og analyse om datadeling, tillit og offentlige datasystemer. Rettet mot studenter eller nyutdannede; åpent for EØS-borgere eller personer med lovlig opphold i Norge.",
+    "skills": [
+      "Data Governance",
+      "Datadeling",
+      "Analyse",
+      "Offentlig politikk",
+      "Research"
+    ],
+    "url": "https://estm.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/37400",
+    "source": "UNDP / UNvacancies",
+    "status": "Kontrollert 19.10.2026 – frist bekreftet via UNvacancies",
+    "checkedAt": "2026-10-19",
+    "addedInUpdate": "2026-10-19"
   }
 ];
-const baseDate = new Date("2026-10-12T00:00:00+02:00");
+const baseDate = new Date("2026-10-19T00:00:00+02:00");
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
@@ -1913,6 +2022,8 @@ function isSoon(j){
   return days>=0 && days<=14;
 }
 let quickMode="";
+let newOnly=false;
+const isNew = j => j.addedInUpdate === latestUpdateId;
 const isMobile = () => window.matchMedia("(max-width: 640px)").matches;
 function activeFilterCount(){
   let n=0;
@@ -1922,6 +2033,7 @@ function activeFilterCount(){
   if($("#seniority").value) n++;
   if($("#sort").value!=="deadline") n++;
   if(quickMode) n++;
+  if(newOnly) n++;
   return n;
 }
 function updateFilterSummary(){
@@ -1943,6 +2055,7 @@ function render(){
   const sort=$("#sort").value;
 
   let list=jobs.filter(j=>{
+    if(newOnly && !isNew(j)) return false;
     const hay=[j.title,j.company,j.location,j.category,j.seniority,j.workform,j.summary,...j.skills].join(" ").toLowerCase();
     if(q && !hay.includes(q)) return false;
     if(cat && j.category!==cat) return false;
@@ -1965,6 +2078,8 @@ function render(){
   $("#count").textContent=`${list.length} av ${jobs.length} stillinger`;
   $("#empty").style.display=list.length?"none":"block";
   updateFilterSummary();
+  $("#newOnly").setAttribute("aria-pressed",String(newOnly));
+  document.querySelectorAll("[data-quick]").forEach(btn=>{if(btn.dataset.quick!=="reset") btn.setAttribute("aria-pressed",String(btn.dataset.quick===quickMode));});
   $("#grid").innerHTML=list.map(j=>`
     <article class="card">
       <div class="topline">
@@ -1977,6 +2092,7 @@ function render(){
       </div>
       <div class="summary">${esc(j.summary)}</div>
       <div class="tags">
+        ${isNew(j) ? '<span class="tag category">Ny ved siste oppdatering</span>' : ""}
         <span class="tag category">${esc(j.category)}</span>
         <span class="tag">${esc(j.seniority)}</span>
         ${j.skills.slice(0,8).map(s=>`<span class="tag">${esc(s)}</span>`).join("")}
@@ -2001,6 +2117,7 @@ $("#q").addEventListener("input",()=>{quickMode="";render();});
 document.querySelectorAll("[data-quick]").forEach(btn=>btn.addEventListener("click",()=>{
   const mode=btn.dataset.quick;
   if(mode==="reset"){
+    newOnly=false;
     quickMode="";
     $("#q").value=""; $("#category").value=""; $("#location").value=""; $("#seniority").value=""; $("#sort").value="deadline";
   } else {
@@ -2014,6 +2131,8 @@ window.addEventListener("resize",()=>{
   const panel=$("#filterPanel");
   if(panel && !isMobile()) panel.open=true;
 });
+$("#newOnly").textContent = `✨ Nye ved siste oppdatering (${jobs.filter(isNew).length})`;
+$("#newOnly").addEventListener("click",()=>{newOnly=!newOnly;render();collapseFiltersOnMobile();});
 fillStats(); fillFilters(); render();
 </script>
 </body>
